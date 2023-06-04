@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    PlanBoard selectPlanBoardByPlanId(int planId);
+    List<PlanBoard> selectPlanBoard();
+    List<PlanBoard> selectPlanBoardByUserId(String userId);
+    PlanDay selectPlanDay(int dayId);
+    List<PlanDay> selectPlanDayByPlanId(int planId);
+
+    int insertPlanDay(PlanDay planDay);
+    int insertPlanBoard(PlanBoard planBoard);
+
+    int updatePlanDay(PlanDay planDay);
+    int updatePlanBoard(PlanBoard planBoard);
+
+    int deletePlanByPlanId(int planId);
+-->
+
+<mapper namespace="com.ssafy.enjoytrip.plan.model.mapper.PlanMapper">
+	<insert id="insertPlanDay" parameterType="planDay">
+		<selectKey resultType="int" keyProperty="dayId" order="AFTER">
+			select max(day_id) from plan_day;
+		</selectKey>
+		insert into plan_day(plan_id,day,place,start_time,end_time,cost) values (#{planId},#{day},#{place},#{startTime},#{endTime},#{cost});
+	</insert>
+
+	<insert id="insertPlanBoard" parameterType="planBoard">
+		<selectKey resultType="int" keyProperty="planId" order="AFTER">
+			select max(plan_id) from plan_board;
+		</selectKey>
+		insert into plan_board(user_id,title,start_day,end_day) values (#{userId},#{title},#{startDay},#{endDay});
+	</insert>
+
+	<select id="selectPlanBoardByPlanId" parameterType="int" resultType="planBoard">
+		select * from plan_board where plan_id = #{planId};
+	</select>
+
+	<select id="selectPlanDay" parameterType="int" resultType="planDay">
+		select * from plan_day where day_id=#{dayId};
+	</select>
+
+	<select id="selectPlanBoard" resultType="planBoard">
+		select * from plan_board;
+	</select>
+	
+	<select id="selectPlanBoardByUserId" parameterType="string" resultType="planBoard">
+		select * from plan_board where user_id = #{userId};
+	</select>
+</mapper>

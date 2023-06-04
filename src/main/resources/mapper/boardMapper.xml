@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.enjoytrip.board.model.mapper.BoardMapper">
+    <resultMap type="com.ssafy.enjoytrip.board.model.dto.Board" id="board">
+        <id column="board_id" property="boardId"/>
+        <result column="user_id" property="userId"/>
+        <result column="current_update" property="currentUpdate"/>
+        <result column="subject" property="subject"/>
+        <result column="content" property="content"/>
+        <result column="hit" property="hit"/>
+    </resultMap>
+
+    <select id="selectBoard" resultType="board">
+        select *
+        from board
+        where board_id = #{boardId};
+    </select>
+
+    <insert id="insertBoard" parameterType="board">
+        <selectKey resultType="int" keyProperty="boardId" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into board (user_id, subject, content)
+        values (#{userId},
+        #{subject}, #{content})
+    </insert>
+    <update id="updateBoard" parameterType="board">
+        update board
+        set subject = #{subject},
+            content = #{content}
+        where board_id = #{boardId}
+    </update>
+
+    <delete id="deleteBoard" parameterType="int">
+        delete
+        from board
+        where board_id = #{boardId}
+    </delete>
+
+
+    <update id="updateHit" parameterType="int">
+        update board
+        set hit = hit + 1
+        where board_id = #{boardId}
+    </update>
+
+    <select id="selectAll" resultMap="board">
+        select *
+        from board
+    </select>
+</mapper>
